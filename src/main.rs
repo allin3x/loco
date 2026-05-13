@@ -5,6 +5,12 @@ enum Langs {
     Rust,
 }
 
+struct Stats {
+    loc_src: i32,
+    loc_tests: i32,
+    loc_all: i32,
+}
+
 fn get_lang_info(lang: &str) -> &str {
     dbg!(lang);
     match lang.to_lowercase().as_str() {
@@ -37,4 +43,8 @@ fn main() {
     println!("Extension for language: {} is {}", lang, extension);
 
     //take path and look up all files in the path and print it for now.
+    match path.to_lowercase().as_str() {
+        "." => println!("Take current path"),
+        _ => println!("Take given path."),
+    }
 }
