@@ -9,7 +9,12 @@ pub fn get_lang_info(lang: &str) -> &str {
     match lang.to_lowercase().as_str() {
         "python" => ".py",
         "rust" => ".rs",
-        _ => todo!(),
+        "csharp" => ".cs",
+        "c" => ".c",
+        "c++" => ".cpp",
+        "go" => ".go",
+        "typescript" => ".ts",
+        _ => todo!("Not Yet implemented."),
     }
 }
 
