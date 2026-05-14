@@ -13,8 +13,8 @@ pub fn get_lang_info(lang: &str) -> &str {
     }
 }
 
-pub fn verify_line_is_code(line: String) {
-    todo!("not implemented yet")
+pub fn verify_line_is_code(line: String) -> bool {
+    line.is_empty()
 }
 
 pub fn process_file(stat_type: &str, stats: &mut Stats, file_path: &Path) -> io::Result<()> {
@@ -23,7 +23,9 @@ pub fn process_file(stat_type: &str, stats: &mut Stats, file_path: &Path) -> io:
 
     for line in reader.lines() {
         if let Ok(line) = line {
-            //println!("{}", line);
+            if !verify_line_is_code(line) {
+                continue;
+            }
             match stat_type {
                 "src" => {
                     stats.loc_src += 1;
@@ -36,7 +38,7 @@ pub fn process_file(stat_type: &str, stats: &mut Stats, file_path: &Path) -> io:
                 _ => {}
             }
         } else {
-            eprintln!("Error reading line from file '{}'", file_path.display());
+            return Err(std::io::Error::other("bad".to_string()));
         }
     }
     Ok(())

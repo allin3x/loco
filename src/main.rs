@@ -1,4 +1,4 @@
-use std::{env, io};
+use std::env;
 use walkdir::WalkDir;
 
 mod stats;
@@ -39,7 +39,7 @@ fn main() {
     for entry in WalkDir::new(path) {
         let entry = entry.unwrap();
         let f_name = entry.file_name();
-        let file_extension = entry.path().extension();
+        //let _file_extension = entry.path().extension();
         let entry_str = entry.path().to_str().unwrap();
 
         if entry_str.contains("src") && entry_str.ends_with(extension) {
@@ -48,15 +48,29 @@ fn main() {
             stats.cnt_all += 1;
 
             //read file
-            crate::utils::process_file("src", &mut stats, entry.path());
+            match crate::utils::process_file("src", &mut stats, entry.path()) {
+                Ok(_) => {}
+                Err(err) => eprintln!(
+                    "Error processing file '{}': {}",
+                    entry.path().display(),
+                    err
+                ),
+            }
         }
 
-        if entry_str.contains("test") && entry_str.contains(extension) {
+        if entry_str.contains("tests") && entry_str.ends_with(extension) {
             println!("{} - {:?}", entry.path().display(), f_name);
             stats.cnt_test += 1;
             stats.cnt_all += 1;
 
-            crate::utils::process_file("test", &mut stats, entry.path());
+            match crate::utils::process_file("tests", &mut stats, entry.path()) {
+                Ok(_) => {}
+                Err(err) => eprintln!(
+                    "Error processing file '{}': {}",
+                    entry.path().display(),
+                    err
+                ),
+            }
         }
     }
 
