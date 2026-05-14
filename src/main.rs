@@ -1,10 +1,13 @@
 use std::env;
+use std::time::Instant;
 use walkdir::WalkDir;
 
 mod stats;
 mod utils;
 
 fn main() {
+    let start_time = Instant::now(); // Record the start time
+
     println!("Lines of Code CLI Tool");
     println!("Usage: loco --language path(. for current path)");
     // Get command line Arguments
@@ -38,12 +41,12 @@ fn main() {
 
     for entry in WalkDir::new(path) {
         let entry = entry.unwrap();
-        let f_name = entry.file_name();
+        //let f_name = entry.file_name();
         //let _file_extension = entry.path().extension();
         let entry_str = entry.path().to_str().unwrap();
 
         if entry_str.contains("src") && entry_str.ends_with(extension) {
-            println!("{} - {:?}", entry.path().display(), f_name);
+            // println!("{} - {:?}", entry.path().display(), f_name);
             stats.cnt_src += 1;
             stats.cnt_all += 1;
 
@@ -59,7 +62,7 @@ fn main() {
         }
 
         if entry_str.contains("tests") && entry_str.ends_with(extension) {
-            println!("{} - {:?}", entry.path().display(), f_name);
+            // println!("{} - {:?}", entry.path().display(), f_name);
             stats.cnt_test += 1;
             stats.cnt_all += 1;
 
@@ -76,4 +79,7 @@ fn main() {
 
     // print stats
     stats::print_stats(stats);
+
+    let elapsed_time = start_time.elapsed(); // Calculate the elapsed time
+    println!("Elapsed time: {:?} seconds", elapsed_time.as_secs_f64());
 }
